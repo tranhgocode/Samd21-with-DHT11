@@ -3,7 +3,7 @@
 
 ## Bước 1 : set up với mircrochip studio
 
-## bước 2 :set up asf
+## bước 2 : set up asf
 
 ## bước 3 : viết hàm cho USART để debug
 
