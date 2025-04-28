@@ -2,6 +2,12 @@
  this github will guide how to connect SAMD21G17D with DHT11
 
 ## Bước 1 : set up với mircrochip studio
+* kết nối với board
+* ấn vào file -> project -> GCC C ASF Board Project
+  * đổi tên ở name 
+  * đổi địa chỉ file ở local
+* chọn Board SAMD21G17D
+* ấn ok thì ta sẽ có 1 project
 
 ## bước 2 : set up asf
 
