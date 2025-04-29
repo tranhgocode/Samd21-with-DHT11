@@ -8,7 +8,7 @@
   * đổi địa chỉ file ở local
     
 ![Hình ảnh SAMD21](img/buoc11.png)
-<img src="image.png" alt="Hình ảnh SAMD21" width="300">
+<img src="img/buoc11.png" alt="Hình ảnh SAMD21" width="300">
  
 * chọn Board SAMD21G17D
 * ấn ok thì ta sẽ có 1 project
