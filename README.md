@@ -1,7 +1,9 @@
 # Samd21-with-DHT11
  this github will guide how to connect SAMD21G17D with DHT11
+ thực hiện trên kit 
 
 ## Bước 1 : set up với mircrochip studio
+
 * kết nối với board
 * ấn vào file -> project -> GCC C ASF Board Project
   * đổi tên ở name 
@@ -14,6 +16,7 @@
 * ấn ok thì ta sẽ có 1 project
 
 ## bước 2 : set up asf
+
 * chọn những thư viện asf mà ta dùng để có thể sử dụng cho samd21
 * ấn vào ASF -> chọn ASF Wizard -> add các modules sau
   * **GENERIC BOARD SUPPORT**: Hỗ trợ cơ bản cho board SAMD21, khởi tạo phần cứng.
@@ -26,6 +29,19 @@
 <img src="img/buoc21.png" alt="bước 3" width="800" height="600">
 
 ## bước 3 : viết hàm cho USART để debug
+
+```c
+#include <asf.h>
+#include <stdio.h>
+
+int main(void) {
+    system_init();
+    delay_init();
+    printf("Reading DHT11 sensor...\n");
+    delay_ms(1000); // Wait 1 second
+    return 0;
+}
+```
 
 ## bước 4 : viết hàm lấy dữ liệu từ DHT11
 
