@@ -7,8 +7,7 @@
   * đổi tên ở name 
   * đổi địa chỉ file ở local
     
-![Hình ảnh SAMD21](img/buoc11.png)
-<img src="img/buoc11.png" alt="Hình ảnh SAMD21" width="300">
+<img src="img/buoc11.png" alt="ảnh bước tạo project" width="500" height="400">
  
 * chọn Board SAMD21G17D
 * ấn ok thì ta sẽ có 1 project
