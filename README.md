@@ -45,4 +45,30 @@ int main(void) {
 
 ## bước 4 : viết hàm lấy dữ liệu từ DHT11
 
+```c
+#include <asf.h>
+#include <stdio.h>
+
+int main(void) {
+    system_init();
+    delay_init();
+    printf("Reading DHT11 sensor...\n");
+    delay_ms(1000); // Wait 1 second
+    return 0;
+}
+```
+
 ## bước 5 : kết nối với Tera Term để hiện thị qua cổng COM
+
+```c
+#include <asf.h>
+#include <stdio.h>
+
+int main(void) {
+    system_init();
+    delay_init();
+    printf("Reading DHT11 sensor...\n");
+    delay_ms(1000); // Wait 1 second
+    return 0;
+}
+```
