@@ -6,7 +6,7 @@
 * ấn vào file -> project -> GCC C ASF Board Project
   * đổi tên ở name 
   * đổi địa chỉ file ở local
-![ảnh tạo project](img/Screenshot 2025-04-28 110443.png)
+![ảnh tạo project](img/buoc11.img)
  
 * chọn Board SAMD21G17D
 * ấn ok thì ta sẽ có 1 project
