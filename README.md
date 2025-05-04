@@ -108,7 +108,7 @@ void Start(void)
 }
 ```
 
-### 4.2. `Response()` (DHT11 → MCU)
+### 4.2. Hàm `Response()` (DHT11 → MCU)
 ```c
 void Response(void)
 {
