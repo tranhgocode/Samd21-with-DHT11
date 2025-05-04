@@ -150,6 +150,7 @@ uint8_t Receive_data(void)
 
 ## bước 5 : kết nối với Tera Term để hiện thị qua cổng COM
 * mở Tera Term
+<img src="img/tera_term_settings.png" alt="bước 3" width="800" height="600">
 * chọn Serial Port
 * chuyển qua baud rate là 9600
 * có thể thấy chữ xuất hiện ở terminal
