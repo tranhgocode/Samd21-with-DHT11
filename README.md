@@ -160,5 +160,3 @@ uint8_t Receive_data(void)
 
 
 
-## lỗi còn tồn đọng 
-* hàm delay đang không chạy (đợi rất lâu không thấy phản hồi)
