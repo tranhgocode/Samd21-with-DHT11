@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
+
 struct usart_module usart_instance;
 
 #define DHT11_pin 21
@@ -22,14 +23,19 @@ uint8_t Receive_data(void);
 
 int main(void)
 {
+	
 	// Khoi tao he thong va delay
 	SystemInit();
 	delay_init(); // Khoi tao delay voi tan so CPU
 
 	configure_usart();
 
-	usart_print("Bat dau chuong trinh\r\n");
+	usart_print("Bat dau chuong trinh\r\n");\
+	delay_ms(1000);
+	usart_print("da delay\r\n");
 	while (1) {
+		//usart_print("hello\r\n");
+		/*
 		Start();
 		Response();
 
@@ -57,14 +63,16 @@ int main(void)
 
 		if (Check_sum == (I_RH + D_RH + I_temp + D_temp))
 		{
-			usart_print("check sum true\n");
+			usart_print(" true\n");
 		}
 		else
 		{
 			usart_print("check sum false\n");
 		}
-		delay_ms(2000); // Delay 2 giây gi?a các l?n ??c
+		delay_ms(2000); // Delay 2 giÃ¢y gi?a cÃ¡c l?n ??c
+		*/
 	}
+	
 }
 
 void configure_usart(void)
@@ -80,12 +88,12 @@ void configure_usart(void)
 	config_usart.pinmux_pad3 = PINMUX_UNUSED;
 
 	while (usart_init(&usart_instance, SERCOM5, &config_usart) != STATUS_OK) {
-		// X? lý l?i kh?i t?o
+		// X? lÃ½ l?i kh?i t?o
 	}
 	usart_enable(&usart_instance);
 }
 
-// Truy?n 1 ký t?
+// Truyen 1 kÃ½ t?
 void usart_putc(char ch)
 {
 	usart_write_buffer_wait(&usart_instance, (uint8_t *)&ch, 1);
@@ -102,53 +110,76 @@ void usart_print(const char *str)
 
 void Start(void)
 {
-	// C?u hình PA21 làm output
-	struct port_config config;
-	port_get_config_defaults(&config);
-	config.direction = PORT_PIN_DIR_OUTPUT;
-	port_pin_set_config(DHT11_pin, &config);
-
-	// Kéo low trong 20ms
-	port_pin_set_output_level(DHT11_pin, false);
-	delay_ms(20);
-
-	// Kéo high trong 40µs
-	port_pin_set_output_level(DHT11_pin, true);
-	delay_us(40);
+	usart_print("dang o ham start\r\n");
+	// Cau hÃ¬nh PA21 lÃ m output
+	PORT->Group[0].DIR.reg |= (1 << DHT11_pin);		// set output 1
+	PORT->Group[0].OUT.reg &= ~(1 << DHT11_pin);	// low 0
+	delay_ms(20);									// delay 20ms
+	PORT->Group[0].OUT.reg |=(1 << DHT11_pin);		// high 1
+	delay_us(40);									// delay 40us
+	usart_print("ket thuc ham start\r\n");
 }
 
 void Response(void)
 {
+	usart_print("dang o ham response \r\n");
 	// config PA21 lam input voi pull-up
-	struct port_config config;
-	port_get_config_defaults(&config);
-	config.direction = PORT_PIN_DIR_INPUT;
-	config.input_pull = PORT_PIN_PULL_UP;
-	port_pin_set_config(DHT11_pin, &config);
+	PORT->Group[0].DIR.reg &= ~(1 << DHT11_pin);				// set input 0
+	PORT->Group[0].PINCFG[DHT11_pin].reg |= PORT_PINCFG_PULLEN;	// bat pull-up
+	PORT->Group[0].OUT.reg |= (1<< DHT11_pin);					// pullup high
 
 	// Cho DHT11 keo low -> high -> low
-	while (!port_pin_get_input_level(DHT11_pin)); // Cho low
-	while (port_pin_get_input_level(DHT11_pin));  // Cho high
-	while (!port_pin_get_input_level(DHT11_pin)); // Cho low
+	usart_print("keo cho DHT11 \r\n");
+	/*
+	while (PORT->Group[0].IN.reg & (1 << DHT11_pin)); // Cho low
+	while (!(PORT->Group[0].IN.reg & (1 << DHT11_pin)));  // Cho high
+	while (PORT->Group[0].IN.reg & (1 << DHT11_pin)); // Cho low
+	*/
+	
+	uint32_t timeout = 10000; // Adjust based on your clock speed
+	while (PORT->Group[0].IN.reg & (1 << DHT11_pin) && timeout--) {
+		if (timeout == 0) {
+			usart_print("Timeout waiting for DHT11 low\r\n");
+			return;
+		}
+	}
+	timeout = 10000;
+	while (!(PORT->Group[0].IN.reg & (1 << DHT11_pin)) && timeout--) {
+		if (timeout == 0) {
+			usart_print("Timeout waiting for DHT11 high\r\n");
+			return;
+		}
+	}
+	timeout = 10000;
+	while (PORT->Group[0].IN.reg & (1 << DHT11_pin) && timeout--) {
+		if (timeout == 0) {
+			usart_print("Timeout waiting for DHT11 low again\r\n");
+			return;
+		}
+	}
+	
+	usart_print("ket thuc ham response \r\n");
 }
 
 uint8_t Receive_data(void)
 {
+	usart_print("dang o ham data \r\n");
 	c = 0;
 	for (int q = 0; q < 8; q++)
 	{
 		// Cho bat ?au bit (low -> high)
-		while (!port_pin_get_input_level(DHT11_pin));
+		while (!(PORT->Group[0].IN.reg & (1 << DHT11_pin)));
 		delay_us(30);
 
-		// Neu van high -> 1, ng??c l?i -> 0
-		if (port_pin_get_input_level(DHT11_pin))
+		// Neu van high -> 1, nguoc lai -> 0
+		if (PORT->Group[0].IN.reg & (1 << DHT11_pin))
 		c = (c << 1) | 0x01;
 		else
 		c = (c << 1);
 
 		// Cho DHT11 keo low ket thuc bit
-		while (port_pin_get_input_level(DHT11_pin));
+		while (PORT->Group[0].IN.reg & (1 << DHT11_pin));
 	}
 	return c;
+	usart_print("ket thuc ham data \r\n");
 }
